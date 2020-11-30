@@ -1,0 +1,12 @@
+++++++++++++++++++++ Effective Memory-Access Time ++++++++++++++++++
+Assuming,
+ 20ns TLB search time and 100ns memory access time
+memory accesses: 1507; total memory accesses 3342 (less page faults)
+TLB hit rate = 0.549072
+Effective memory-access time = 165.092758ns
+++++++++++++++++++++ Effective Access Time ++++++++++++++++++
+Assuming,
+ 14ms average page-fault service time (w/o swap out), a 12ms average swap out time, and 100ns memory access time
+swaps: 141; invalidates: 654; page faults: 658
+Page fault ratio = 0.164500
+Effective access time = 2.863935ms

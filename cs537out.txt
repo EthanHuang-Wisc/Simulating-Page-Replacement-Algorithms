@@ -1,0 +1,5 @@
+Average Memory Utilization (AMU): 0.000000 
+Average Runable Processes (ARP): 0.000000 
+Total Memory References (TMR): 1555 , total accesses : 1555
+Total Page Ins (TPI): 0 38
+Running Time: 0.000000 
