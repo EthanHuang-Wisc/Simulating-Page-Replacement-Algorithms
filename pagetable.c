@@ -1,9 +1,10 @@
 //simulator.c
 //Author: Ethan Huang
 //Partner: NONE
+
 /**********************************************************************
 
-   File          : cse473-p1.c
+   File          : sim.c
 
    Description   : This is the main file for page replacement project
                    (see .h for applications)
@@ -12,44 +13,10 @@
    By            : Trent Jaeger, Yuquan Shan
 
 ***********************************************************************/
-/**********************************************************************
-Copyright (c) 2016 The Pennsylvania State University
-All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-    * Neither the name of The Pennsylvania State University nor the names of its contributors may be used to endorse or promote products derived from this softwiare without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-***********************************************************************/
-
-/* Include Files */
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <assert.h>
-#include <pthread.h>
-#include <sched.h>
 
 /* Project Include Files */
-#include "sim.h"
+#include "pagetable.h"
 #include "utils.h"
 
 /* Definitions */
@@ -82,7 +49,7 @@ double ARP = 0; /* This value is an average of the number of processes that are 
 int TMR = 0;    /* A count of the total number of memory references in the trace file */
 int TPI = 0;    /* Total number of page faults (resulting in disk transfers into memory). */
 double RT = 0;  /* This is the total number of clock ticks for the simulator run. */
-
+int MT = -1; /* a siginal to return hit or miss, hit for 1, miss for 0*/
 /* page replacement algorithms for MFU, CLOCK(Second), enh, FIFO */
 int (*pt_replace_init[])(FILE *fp) = {init_mfu, init_second, init_enh, init_fifo};
 
@@ -142,7 +109,7 @@ int main(int argc, char **argv)
     //test miss or hit
     //int t ;
 
-    //printf("Hit or Miss in page table ? 1-hit ,0-miss -> %d \n",t);
+    printf("Hit or Miss in page table ? 1-hit ,0-miss -> %d \n", MT);
 
     /* get memory access */
     if (get_memory_access(in, &pid, &vaddr, &op, &eof))
@@ -256,6 +223,8 @@ int stats_result(FILE *out)
   fprintf(out, "Running Time: %f \n", RT);
   return 0;
 }
+
+
 
 /**********************************************************************
 
@@ -468,6 +437,7 @@ int tlb_resolve_addr(unsigned int vaddr, unsigned int *paddr, int op)
   {
     if (tlb[i].page == page)
     {
+      //if vaddr, paddr existing, then MT = 1;
       *paddr = tlb[i].frame * PAGE_SIZE + vaddr - page * PAGE_SIZE;
       printf("tlb_resolve_addr: hit -- vaddr: 0x%x; paddr: 0x%x\n", vaddr, *paddr);
       current_pt[tlb[i].page].ct++;
@@ -576,7 +546,9 @@ int pt_demand_page(int pid, unsigned int vaddr, unsigned int *paddr, int op, int
   unsigned int page = (vaddr / PAGE_SIZE);
   frame_t *f = (frame_t *)NULL;
   int other_pid;
-
+  //miss or hit siginal
+  MT = 0;
+  //page fault increase
   pfs++;
 
   /* find a free frame */
@@ -729,3 +701,14 @@ int hw_update_pageref(ptentry_t *ptentry, int op)
   return 0;
 }
 
+
+
+int hit_check(unsigned int a, unsigned int vaddr){
+  // pid_node addr;
+  // addr.key = vaddr;
+  
+  // void *result;
+  // struct pid_node *existing;// if miss, keep the vpn in the node,
+  // *(struct pid_node **)result;
+  return 0;
+}

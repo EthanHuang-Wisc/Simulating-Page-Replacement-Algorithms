@@ -11,11 +11,7 @@ typedef struct pid_node {
      int pid;
 }pid_node;
 
-typedef struct 
-{
-     int pid;
-     int vpn;
-}filetype;
+
 
 typedef struct
 {

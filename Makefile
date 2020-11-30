@@ -32,8 +32,8 @@ PT-TARGETS=sim
 
 sim : $(PT-TARGETS)
 
-sim : sim.o mfu.o second.o enh.o fifo.o utils.o
-	$(LINK) $(LDFLAGS) sim.o mfu.o second.o enh.o fifo.o utils.o -o $@
+sim :  pagetable.o mfu.o second.o enh.o fifo.o utils.o
+	$(LINK) $(LDFLAGS)  pagetable.o mfu.o second.o enh.o fifo.o utils.o -o $@
 
 #lib$(CSE473LIB).a : $(CSE473LIBOBJS)
 #	$(AR) $@ $(CSE473LIBOBJS)

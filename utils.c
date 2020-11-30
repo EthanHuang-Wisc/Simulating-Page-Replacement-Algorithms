@@ -246,7 +246,6 @@ void add_pidnode(void **root, struct pid_node *node)
 
 
 
-
 // This function prints an error message and exits
 void exit_with_message(char *message)
 {
@@ -298,8 +297,6 @@ void freeArray(DArray *a)
     a->array = NULL;
     a->used = a->size = 0;
 }
-
-
 
 
 int findDistinctpId(int *arr, int size)

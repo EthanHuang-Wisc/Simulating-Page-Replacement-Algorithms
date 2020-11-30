@@ -26,7 +26,7 @@
 #include <sched.h>
 
 /* Project Include Files */
-#include "sim.h"
+#include "pagetable.h"
 
 /* Definitions */
 

@@ -1,3 +1,21 @@
+#ifndef _PAGETABLE_H_
+#define _PAGETABLE_H_
+/* Include Files */
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <assert.h>
+#include <pthread.h>
+#include <sched.h>
+
+#endif
+/* Project Include Files */
+
 
 #define TRUE             1
 #define PAGE_SIZE        0x1000 /* -p option*/

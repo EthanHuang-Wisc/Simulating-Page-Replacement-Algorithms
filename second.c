@@ -47,7 +47,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sched.h>
 
 /* Project Include Files */
-#include "sim.h"
+#include "pagetable.h"
 
 /* Definitions */
 
