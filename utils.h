@@ -12,7 +12,6 @@ typedef struct pid_node {
 }pid_node;
 
 
-
 typedef struct
 {
     int *array;
@@ -28,9 +27,7 @@ char *get_next_token(const char *line, const char *delimiters, size_t *current_p
 void initArray(DArray *a, size_t initialSize);
 void insertArray(DArray *a, int element);
 void freeArray(DArray *a);
-
-//
-int findDistinctpId(int *arr, int size);
+extern int hit_check(DArray da, unsigned int *paddr);
 
 //pid in tree nodes methods
 void delete_pidnode(void **root, int key);
@@ -39,4 +36,3 @@ void add_pidnode(void **root, struct pid_node *node);
 void exit_with_message(char *message);
 struct pid_node *make_node(unsigned int key, unsigned int pid);
 int compare(const void *a, const void *b);
-//void fileProcessor(FILE *file);

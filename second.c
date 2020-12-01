@@ -1,37 +1,7 @@
 
-/**********************************************************************
-
-   File          : cse473-p1-second.c
-
-   Description   : This is second chance page replacement algorithm
-                   (see .h for applications)
-                   See http://www.cs.cf.ac.uk/Dave/C/node27.html for info
-
-   By            : Trent Jaeger, Yuquan Shan
-
-***********************************************************************/
-/**********************************************************************
-Copyright (c) 2016 The Pennsylvania State University
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-    * Neither the name of The Pennsylvania State University nor the names of its contributors may be used to endorse or promote products derived from this softwiare without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-***********************************************************************/
+//clock.c
+//This is second chance page replacement algorithm
+//Ethan Huang
 
 /* Include Files */
 #include <stdio.h>
@@ -93,7 +63,7 @@ int init_second( FILE *fp )
 void print_second(){
   second_entry_t *second_ptr=page_list->first;
   int first_access=1;
-  printf("second_page_list: ----");
+  printf("clock_page_list: ----");
   // while(mfu_ptr->ptentry->frame!=page_list->first->ptentry->frame||first_access){
    while(second_ptr!=page_list->first||first_access){
     first_access=0;
@@ -122,11 +92,11 @@ int replace_second( int *pid, frame_t **victim )
   /* return info on victim */
   while((first->ptentry->bits&REFBIT)==REFBIT)
   {
-    printf("replace_second: look at frame %d bits 0x%d\n",first->ptentry->frame,first->ptentry->bits);
+    printf("replace_clock: look at frame %d bits 0x%d\n",first->ptentry->frame,first->ptentry->bits);
     first->ptentry->bits-=REFBIT;
     first=first->next;
   }
-  printf("replace_second: look at frame %d bits 0x%d\n",first->ptentry->frame,first->ptentry->bits);
+  printf("replace_clock: look at frame %d bits 0x%d\n",first->ptentry->frame,first->ptentry->bits);
   *victim = &physical_mem[first->ptentry->frame];
   *pid = first->pid;
 

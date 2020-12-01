@@ -137,7 +137,7 @@ char *get_next_token(const char *line,
 
 
 
-
+/* pid in tree nodes */
 
 //Implemented pid in three nodes method
 // This is the compare function for the binary tree
@@ -270,7 +270,7 @@ struct pid_node *make_pidnode( int key,  int pid)
 
 
 
-
+/* dynamic array */
 //dynamic array methods
 void initArray(DArray *a, size_t initialSize)
 {
@@ -299,42 +299,5 @@ void freeArray(DArray *a)
 }
 
 
-int findDistinctpId(int *arr, int size)
-{
-    int numberofPid = 0;
-    //int duplicate =0;
-    int pindex = 0;
-    
-    void *root;
-    root = NULL;
-
-    // Pick all elements one by one
-    for (int i = 0; i < size; i++)
-    {
-        int j = 0;
-        for (j = 0; j < i; j++)
-        {
-            if (arr[i] == arr[j])
-            {
-                //duplicate here
-                break;
-            }
-        }
-
-        // If not printed earlier, then print it
-        if (i == j)
-        {  
-            //將arr[i] 丟到 一個rbtree裡面,<index, pid>
-            add_pidnode(&root, make_pidnode(pindex++,arr[i]));
-            printf("pid = %d, \t which index = %d \n", arr[i], pindex);    
-            //duplicate = 0;
-            numberofPid++;
-        }
-    }
-
-    //size_t sizen = sizeof(parr)/sizeof(parr[0]);
-    return numberofPid;
-
-}
 
 

@@ -12,19 +12,24 @@
 #include <assert.h>
 #include <pthread.h>
 #include <sched.h>
+#include <time.h>
 
 #endif
-/* Project Include Files */
+
 
 
 #define TRUE             1
-#define PAGE_SIZE        0x1000 /* -p option*/
+//#define PAGE_SIZE        0x1000 /* -p option*/
 #define VIRTUAL_PAGES    64
-#define PHYSICAL_FRAMES  4      /* -m option*/
+//#define PHYSICAL_FRAMES  1024   /* -m option, it should be 1MB for 1024 by default, 4 by original*/
 #define MAX_PROCESSES    100
 #define TLB_ENTRIES      16
 #define WRITE_FRAC       15
 #define TLB_INVALID      -2
+
+/* Global value */
+extern int PAGE_SIZE;
+extern int PHYSICAL_FRAMES;
 
 /* bitmasks */
 #define VALIDBIT          0x1
@@ -78,9 +83,12 @@ typedef struct task {
 task_t processes[MAX_PROCESSES];
 
 
-extern frame_t physical_mem[PHYSICAL_FRAMES];
+//extern frame_t physical_mem[PHYSICAL_FRAMES];
+extern frame_t *physical_mem;
 extern ptentry_t *current_pt;
 
+/*data parsing method*/
+int parsedata(FILE f, int algo);
 
 /* initialization */
 extern int page_replacement_init( FILE *fp, int mech );
@@ -89,10 +97,6 @@ extern int page_replacement_init( FILE *fp, int mech );
 extern int process_create( int pid );
 extern int process_frames( int pid, int *frames );
 
-/* TLB functions */
-extern int tlb_resolve_addr( unsigned int vaddr, unsigned int *paddr, int op );
-extern int tlb_update_pageref( int frame, int page, int op );
-extern int tlb_flush( void );
 
 /* page table functions */
 extern int pt_resolve_addr( unsigned int vaddr, unsigned int *paddr, int *valid, int op );
@@ -101,12 +105,22 @@ extern int pt_write_frame( frame_t *frame );
 extern int pt_alloc_frame( int pid, frame_t *f, ptentry_t *ptentry, int op, int mech );
 extern int pt_invalidate_mapping( int pid, int page );
 
+
+
+/* TLB functions */
+extern int tlb_resolve_addr( unsigned int vaddr, unsigned int *paddr, int op );
+extern int tlb_update_pageref( int frame, int page, int op );
+extern int tlb_flush( void );
+
+
+
 /* external functions */
 extern int get_memory_access( FILE *fp, int *pid, unsigned int *vaddr, int *op, int *eof );
 extern int context_switch( int pid );
-extern int hw_update_pageref( ptentry_t *ptentry, int op );
+extern int hardware_update_pageref( ptentry_t *ptentry, int op );
 extern int write_results( FILE *out );
 extern int stats_result(FILE *out);
+
 
 
 /* enhanced second chance enh.c */
@@ -119,7 +133,7 @@ extern int init_mfu( FILE *fp );
 extern int update_mfu( int pid, frame_t *f );
 extern int replace_mfu( int *pid, frame_t **victim );
 
-/* second - second.c */
+/* clock- second.c */
 extern int init_second( FILE *fp );
 extern int update_second( int pid, frame_t *f );
 extern int replace_second( int *pid, frame_t **victim );
@@ -128,3 +142,8 @@ extern int replace_second( int *pid, frame_t **victim );
 extern int init_fifo( FILE *fp );
 extern int update_fifo( int pid, frame_t *f );
 extern int replace_fifo( int *pid, frame_t **victim );
+
+/* lru - lru.c*/
+extern int init_lru(FILE *fp);
+extern int replace_lru(int *pid, frame_t **victim);
+extern int update_lru(int pid, frame_t *f);

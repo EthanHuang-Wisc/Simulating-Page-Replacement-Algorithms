@@ -1,13 +1,4 @@
 
-/**********************************************************************
-
-   File          : cs537fifo.c
-
-   Description   : This is FIFO page replacement algorithm
-
-   By            : Ethan Huang
-
-***********************************************************************/
 //File Name: 537fifo.c
 //Author: Ethan Huang
 //Partner: NONE

@@ -1,5 +1,7 @@
-Average Memory Utilization (AMU): 0.000000 
-Average Runable Processes (ARP): 0.000000 
-Total Memory References (TMR): 1555 , total accesses : 1555
-Total Page Ins (TPI): 0 38
-Running Time: 0.000000 
+++++++++++++++++++++ Stats for Result ++++++++++++++++++
+Average Memory Utilization (AMU): 0.093750, MemAccess: 90 ,occupied frames: 561, total frames: 5984. 
+Average Runable Processes (ARP): 0.010361 
+Total Memory References (TMR): 1555  
+Total Page Ins (TPI): 34
+Running Time: 265304500ns
+++++++++++++++++++++ END of This Line ++++++++++++++++++
