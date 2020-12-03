@@ -149,9 +149,9 @@ int compare(const void *a, const void *b)
     struct pid_node *node_a = (struct pid_node *)a;
     struct pid_node *node_b = (struct pid_node *)b;
 
-    if (node_a->key < node_b->key)
+    if (node_a->pid < node_b->pid)
         return -1;
-    else if (node_a->key > node_b->key)
+    else if (node_a->pid > node_b->pid)
         return 1;
     else
         return 0;
@@ -160,18 +160,18 @@ int compare(const void *a, const void *b)
 
 // Find a node in the binary tree
 // Returns NULL if no node is found
-struct pid_node *find_pidnode(void **root, int key)
+struct pid_node *find_pidnode(void **root, int pid)
 {
     void *result;
     struct pid_node *node;
     struct pid_node search_node;
 
-    search_node.key = key;
+    search_node.pid = pid;
 
     if ((result = tfind(&search_node, root, compare)) == NULL) {
         // No node found
         if(debug == T){
-            printf("No node found. key: %d\n", key);
+            printf("No node found. pid: %d\n", pid);
         }
         
         node = NULL;
@@ -179,7 +179,7 @@ struct pid_node *find_pidnode(void **root, int key)
         // Node found
         node = *(struct pid_node**)result;
         if(debug == T){
-            printf("Found node. key: %d, value: %d\n", node->key, node->pid);
+            printf("Found node. key: %d, value: %ld\n", node->pid, node->pos);
         }
     }
 
@@ -188,15 +188,15 @@ struct pid_node *find_pidnode(void **root, int key)
 
 // Delete a node in the binary tree
 // If it is not found, do nothing
-void delete_pidnode(void **root, int key)
+void delete_pidnode(void **root, int pid)
 {
     struct pid_node *node;
 
-    if ((node = find_pidnode(root, key)) == NULL) {
+    if ((node = find_pidnode(root, pid)) == NULL) {
         // Nothing to delete
     } else {
         tdelete(node, root, compare);
-        printf("Deleted node. key: %d, value: %d\n", node->key, node->pid);
+        printf("Deleted node. pid: %d, pos: %ld\n", node->pid, node->pos);
         // It's important to free the only after deleting it
         free(node);
     }
@@ -208,8 +208,8 @@ void free_pidnode(void *ptr)
 {
     struct pid_node *node = ptr;
 
-    printf("Freeing node during tree destroy. key: %d, value: %d\n",
-            node->key, node->pid);
+    printf("Freeing node during tree destroy. pid: %d, pos: %ld\n",
+            node->pid, node->pos);
 
     free(node);
 }
@@ -231,13 +231,13 @@ void add_pidnode(void **root, struct pid_node *node)
         if (existing != node) {
             if(debug == T){
                 printf("Node with key already exists. ");
-                printf("key: %d, value: %d\n", existing->key, existing->pid);
+                printf("pid: %d, pos: %ld\n", existing->pid, existing->pos);
             }
            
             free(node);
         } else {
             if(debug == T){
-                printf("Added node. key: %d, value: %d\n", node->key, node->pid);
+                printf("Added node. pid: %d, pos: %ld\n", node->pid, node->pos);
             }
             
         }
@@ -254,14 +254,14 @@ void exit_with_message(char *message)
 }
 
 // Make node for binary tree
-struct pid_node *make_pidnode( int key,  int pid)
+struct pid_node *make_pidnode( int pid,  long pos)
 {
     struct pid_node *node;
 
     if ((node = malloc(sizeof(struct pid_node))) == NULL)
         exit_with_message("Failed to malloc");
 
-    node->key = key;
+    node->pos = pos;
     node->pid = pid;
 
     return node;

@@ -1,28 +1,33 @@
-//simulator.c
+//pagetable.c
 //Author: Ethan Huang
 //Partner: NONE
-
 
 /* Project Include Files */
 #include "pagetable.h"
 #include "utils.h"
 
 /* Definitions */
-#define USAGE "cs537sim <input.file> <output.file> <replacement.mech> \n"
+//#define USAGE "cs537sim <input.file> <output.file> <replacement.mech> \n"
+#define USAGE  "USAGE: 537fifo  -m pagesize -p physical tracefile\n"
 #define NUM_PROCESSES 100
 
-int PAGE_SIZE = 4096;
-int PHYSICAL_FRAMES = 1024;
+// int PAGE_SIZE = 4096;
+// int PHYSICAL_FRAMES = 1024;
 
+// int PAGE_SIZE = 0x1000; //default value
+// int PHYSICAL_FRAMES = 0x100; // default value
+
+long pos = 0;
+//char *tracefile = NULL;
 //as record usage
-DArray arr;
+void *postree;
 
 /* need a store for all processes */
 task_t processes[MAX_PROCESSES];
 
 /* physical memory representation */
 //frame_t physical_mem[PHYSICAL_FRAMES];
- frame_t *physical_mem;
+frame_t *physical_mem;
 
 /* tlb */
 tlb_t tlb[TLB_ENTRIES];
@@ -41,12 +46,12 @@ int total_accesses = 0;  /* all accesses, this is TMR*/
 //stats for p4
 double AMU = 0; /* The value is a (total occupied)/(clock) */
 double ARP = 0; /* This value is an average of the number of processes that are running */
-int TPI = 0;    /* Total number of page faults (resulting in disk transfers into memory). */
-long RT = 0;  /* This is the total number of clock ticks for the simulator run. */
-int MT = -1; /* a siginal to return hit or miss, hit for 1, miss for 0*/
-int TF = 0; /* total frames */
-int OF = 0; /* stats of occupied frames*/
-int AP = 0;
+int TPI = 0;    /* Total number of misses */
+long RT = 0;    /* This is the total number of clock ticks for the simulator run. */
+int MT = -1;    /* a siginal to return hit or miss, hit for 1, miss for 0*/
+int TF = 0;     /* total frames */
+int OF = 0;     /* stats of occupied frames*/
+int AP = 0;     /* total process*/
 
 /* page replacement algorithms for MFU, CLOCK(Second), enh, FIFO */
 int (*pt_replace_init[])(FILE *fp) = {init_mfu, init_second, init_enh, init_fifo, init_lru};
@@ -66,137 +71,30 @@ int (*pt_update_replacement[])(int pid, frame_t *f) = {update_mfu, update_second
 ***********************************************************************/
 
 /* Functions */
-int main(int argc, char **argv)
-{
-  int eof = 0;
-  FILE *in, *out;
-  int op; /* read (0) or write (1) */
-  
-  
-  initArray(&arr,5);
-
-  /* Check for arguments */
-  if (argc < 4)
-  {
-    /* Complain, explain, and exit */
-    fprintf(stderr, "missing or bad command line arguments\n");
-    fprintf(stderr, USAGE);
-    exit(-1);
-  }
-
-  /* open the input file and return the file descriptor */
-  if ((in = fopen(argv[1], "r")) < 0)
-  {
-    fprintf(stderr, "input file open failure\n");
-    return -1;
-  }
-  //time record
-  struct timespec simStart, simEnd;
-  clock_gettime(CLOCK_REALTIME, &simStart);
-
-  //read file fere from init method
-  /* Initialization */
-  /* for example: build optimal list */ 
-  page_replacement_init(in, atoi(argv[3]));
-
-  /* execution loop */
-  while (TRUE)
-  {
-    int pid;
-    unsigned int vaddr, paddr;
-    int valid;
-    
-    
-
-    //test
-    printf("pid = %d, vpn = %d\n",pid,vaddr);
-    
-    //test miss or hit
-    printf("Hit or Miss in page table ? 1-hit ,0-miss -> %d \n", MT);
-    
-
-    /* get memory access */
-    if (get_memory_access(in, &pid, &vaddr, &op, &eof))
-    {
-      fprintf(stderr, "get_memory_access\n");
-      exit(-1);
-    }
-    
-    /* done at eof */
-    if (eof)
-      break;
-
-    total_accesses++;
-
-    /* if memory access count reaches window size, update working set bits */
-    processes[pid].ct++;
-
-    /* check if need to context switch */
-    if ((!current_pid) || (pid != current_pid))
-    {
-      if (context_switch(pid))
-      {
-        fprintf(stderr, "context_switch\n");
-        exit(-1);
-      }
-    }
-
-    /* lookup mapping in TLB */
-    if (!tlb_resolve_addr(vaddr, &paddr, op))
-    {
-      pt_resolve_addr(vaddr, &paddr, &valid, op);
-      /* if invalid, update page tables (w/ replacement, if necessary) */
-      if (!valid)
-        pt_demand_page(pid, vaddr, &paddr, op, atoi(argv[3]));
-    }
-  }
-  //TMR = total_accesses;
-  clock_gettime(CLOCK_REALTIME, &simEnd);
-  /* close the input file */
-  fclose(in);
-
-  
-  /* open the output file and return the file descriptor */
-  if ((out = fopen(argv[2], "w+")) < 0)
-  {
-    fprintf(stderr, "write output info\n");
-    return -1;
-  }
-  
-  
-  RT = simEnd.tv_nsec - simStart.tv_nsec;
-  free(physical_mem);
-  //write_results(out);
-  stats_result(out);
-
-  exit(0);
-}
-
-
-/* Functions */
-// int parsedata(FILE finput, FILE foutput, char algo)
+// int main(int argc, char **argv)
 // {
 //   int eof = 0;
 //   FILE *in, *out;
 //   int op; /* read (0) or write (1) */
 
+//   //initialize a binary tree
+//   postree = NULL;
 
 //   /* Check for arguments */
-// //   if (argc < 4)
-// //   {
-// //     /* Complain, explain, and exit */
-// //     fprintf(stderr, "missing or bad command line arguments\n");
-// //     fprintf(stderr, USAGE);
-// //     exit(-1);
-// //   }
+//   if (argc < 4)
+//   {
+//     /* Complain, explain, and exit */
+//     fprintf(stderr, "missing or bad command line arguments\n");
+//     fprintf(stderr, USAGE);
+//     exit(-1);
+//   }
 
 //   /* open the input file and return the file descriptor */
-//   if ((in = fopen(f, "r")) < 0)
+//   if ((in = fopen(argv[1], "r")) < 0)
 //   {
 //     fprintf(stderr, "input file open failure\n");
 //     return -1;
 //   }
-
 //   //time record
 //   struct timespec simStart, simEnd;
 //   clock_gettime(CLOCK_REALTIME, &simStart);
@@ -204,7 +102,7 @@ int main(int argc, char **argv)
 //   //read file fere from init method
 //   /* Initialization */
 //   /* for example: build optimal list */
-//   page_replacement_init(in, atoi(algo));
+//   page_replacement_init(in, atoi(argv[3]));
 
 //   /* execution loop */
 //   while (TRUE)
@@ -212,15 +110,13 @@ int main(int argc, char **argv)
 //     int pid;
 //     unsigned int vaddr, paddr;
 //     int valid;
-    
-    
 
+//     //scan file
+//     //fseek(in, pos, SEEK_SET); /* start at pos */
+//     pos = ftell(in);
 //     //test
 //     printf("pid = %d, vpn = %d\n",pid,vaddr);
-    
-//     //test miss or hit
-//     printf("Hit or Miss in page table ? 1-hit ,0-miss -> %d \n", MT);
-    
+//     printf("file position is %ld \n", pos);
 
 //     /* get memory access */
 //     if (get_memory_access(in, &pid, &vaddr, &op, &eof))
@@ -228,14 +124,17 @@ int main(int argc, char **argv)
 //       fprintf(stderr, "get_memory_access\n");
 //       exit(-1);
 //     }
-    
+
+//     //test miss or hit
+//     printf("Hit or Miss in page table ? 1-hit ,0-miss -> %d \n", MT);
+
 //     /* done at eof */
 //     if (eof)
 //       break;
 
 //     total_accesses++;
 
-//     /* if memory access count reaches window size, update working set bits */
+//     /* if memory access count reaches window size, update  bits */
 //     processes[pid].ct++;
 
 //     /* check if need to context switch */
@@ -254,34 +153,129 @@ int main(int argc, char **argv)
 //       pt_resolve_addr(vaddr, &paddr, &valid, op);
 //       /* if invalid, update page tables (w/ replacement, if necessary) */
 //       if (!valid)
-//         pt_demand_page(pid, vaddr, &paddr, op, atoi(algo));
+//         pt_demand_page(pid, vaddr, &paddr, op, atoi(argv[3]));
 //     }
-//   }
+//   }//end while
+
 //   //TMR = total_accesses;
 //   clock_gettime(CLOCK_REALTIME, &simEnd);
 //   /* close the input file */
 //   fclose(in);
 
 //   /* open the output file and return the file descriptor */
-//   if ((out = fopen(foutput, "w+")) < 0)
+//   if ((out = fopen(argv[2], "w+")) < 0)
 //   {
 //     fprintf(stderr, "write output info\n");
 //     return -1;
 //   }
-  
-  
+
 //   RT = simEnd.tv_nsec - simStart.tv_nsec;
-  
+//   free(physical_mem);
 //   //write_results(out);
 //   stats_result(out);
 
 //   exit(0);
 // }
 
+int parsedata(char *finput,  char *algo)
+{
+  int eof = 0;
+  FILE *in, *out;
+  int op; /* read (0) or write (1) */
 
+  //initialize a binary tree
+  postree = NULL;
 
+  /* Check for arguments */
+  //printf("PHYSICAL_FRAMES in pt = %d\n",PHYSICAL_FRAMES);
 
+  /* open the input file and return the file descriptor */
+  if ((in = fopen(finput, "r")) < 0)
+  {
+    fprintf(stderr, "input file open failure\n");
+    return -1;
+  }
+  //time record
+  struct timespec simStart, simEnd;
+  clock_gettime(CLOCK_REALTIME, &simStart);
 
+  //read file fere from init method
+  /* Initialization */
+  /* for example: build optimal list */
+  page_replacement_init(in, atoi(algo));
+
+  /* execution loop */
+  while (TRUE)
+  {
+    int pid;
+    unsigned int vaddr, paddr;
+    int valid;
+
+    //scan file
+    //fseek(in, pos, SEEK_SET); /* start at pos */
+    pos = ftell(in);
+    //test
+    printf("pid = %d, vpn = %d\n",pid,vaddr);
+    printf("file position is %ld \n", pos);
+
+    /* get memory access */
+    if (get_memory_access(in, &pid, &vaddr, &op, &eof))
+    {
+      fprintf(stderr, "get_memory_access\n");
+      exit(-1);
+    }
+
+    //test miss or hit
+    printf("Hit or Miss in page table ? 1-hit ,0-miss -> %d \n", MT);
+
+    /* done at eof */
+    if (eof)
+      break;
+
+    total_accesses++;
+
+    /* if memory access count reaches window size, update  bits */
+    processes[pid].ct++;
+
+    /* check if need to context switch */
+    if ((!current_pid) || (pid != current_pid))
+    {
+      if (context_switch(pid))
+      {
+        fprintf(stderr, "context_switch\n");
+        exit(-1);
+      }
+    }
+
+    /* lookup mapping in TLB */
+    if (!tlb_resolve_addr(vaddr, &paddr, op))
+    {
+      pt_resolve_addr(vaddr, &paddr, &valid, op);
+      /* if invalid, update page tables (w/ replacement, if necessary) */
+      if (!valid)
+        pt_demand_page(pid, vaddr, &paddr, op, atoi(algo));
+    }
+  }//end while
+
+  //TMR = total_accesses;
+  clock_gettime(CLOCK_REALTIME, &simEnd);
+  /* close the input file */
+  fclose(in);
+
+  /* open the output file and return the file descriptor */
+  if ((out = fopen("537out.txt", "w+")) < 0)
+  {
+    fprintf(stderr, "write output info\n");
+    return -1;
+  }
+
+  RT = abs(simEnd.tv_nsec) - abs(simStart.tv_nsec);
+  free(physical_mem);
+  //write_results(out);
+  stats_result(out);
+
+  exit(0);
+}
 
 
 /**********************************************************************
@@ -334,42 +328,39 @@ int write_results(FILE *out)
   //   p = p + AP;
   // }
 
-
-
-  AMU = (double)OF/(double)TF;
-  ARP = (double)AP/(double)TF;
-  fprintf(out, "++++++++++++++++++++ Stats for Result ++++++++++++++++++\n");
-  fprintf(out, "Average Memory Utilization (AMU): %f, MemAccess: %d ,occupied frames: %d, total frames: %d. \n" , AMU, memory_accesses, OF, TF);
-  fprintf(out, "Average Runable Processes (ARP): %f \n", ARP);
-  fprintf(out, "Total Memory References (TMR): %d  \n", total_accesses);
-  fprintf(out, "Total Page Ins (TPI): %d %d\n", TPI, pfs);
-  fprintf(out, "Running Time: %ldns\n", RT);
-  fprintf(out, "++++++++++++++++++++ END of This Line ++++++++++++++++++\n");
-  return 0;
-}
-
-
-//stats_results
-//0 if successful, <0 otherwise
-int stats_result(FILE *out)
-{
-
-
   TPI = pfs;
-  AMU = (double)OF/(double)TF;
-  ARP = (double)AP/(double)TF;
-
+  AMU = (double)OF / (double)TF;
+  ARP = (double)AP / RT;
   fprintf(out, "++++++++++++++++++++ Stats for Result ++++++++++++++++++\n");
-  fprintf(out, "Average Memory Utilization (AMU): %f, MemAccess: %d ,occupied frames: %d, total frames: %d. \n" , AMU, memory_accesses, OF, TF);
+  fprintf(out, "Average Memory Utilization (AMU): %f, MemAccess: %d ,occupied frames: %d, total frames: %d. \n", AMU, memory_accesses, OF, TF);
   fprintf(out, "Average Runable Processes (ARP): %f \n", ARP);
-  fprintf(out, "Total Memory References (TMR): %d  \n", total_accesses);
+  fprintf(out, "Total Memory References (TMR): %d, total process: %d  \n", total_accesses, AP);
   fprintf(out, "Total Page Ins (TPI): %d\n", TPI);
   fprintf(out, "Running Time: %ldns\n", RT);
   fprintf(out, "++++++++++++++++++++ END of This Line ++++++++++++++++++\n");
   return 0;
 }
 
+//stats_results
+//0 if successful, <0 otherwise
+int stats_result(FILE *out)
+{
 
+  //TPI = pfs;
+  AMU = (double)OF / (double)TF;
+  ARP = (double)AP / (double)RT;
+
+  fprintf(out, "++++++++++++++++++++ Stats for Result ++++++++++++++++++\n");
+  fprintf(out, "Memory Access: %d, Occupied Frames: %d, Total Frames: %d.\n", memory_accesses, OF, TF);
+  fprintf(out, "Running processes #:  %d\n", AP);
+  fprintf(out, "Average Memory Utilization (AMU): %f\n", AMU);
+  fprintf(out, "Average Runable Processes (ARP): %.10f \n", ARP);
+  fprintf(out, "Total Memory References (TMR): %d  \n", total_accesses);
+  fprintf(out, "Total Page Ins (TPI): %d\n", TPI);
+  fprintf(out, "Running Time: %ldns\n", RT);
+  fprintf(out, "++++++++++++++++++++ END of This Line ++++++++++++++++++\n");
+  return 0;
+}
 
 /**********************************************************************
 
@@ -390,7 +381,6 @@ int page_replacement_init(FILE *fp, int mech)
   int err;
   int pid;
   unsigned int vaddr;
-  long pos = 0;
 
   fseek(fp, 0, SEEK_SET); /* start at beginning */
 
@@ -410,11 +400,14 @@ int page_replacement_init(FILE *fp, int mech)
   /* create processes, including initial page table */
   while (fscanf(fp, "%d %x\n", &pid, &vaddr) == 2)
   {
-    
+
     //printf("pid is : %d, vpn is : %x \n", pid, vaddr);
-   
-    pos = ftell(fp);
-    printf("file position is %ld \n", pos);
+    //if(MT==0)
+    //pos = ftell(fp);
+
+    //
+    //add_pidnode(&postree, make_node(pid, pos));
+    //printf("file position is %ld \n", pos);
 
     //read processor
     //error from this if statement
@@ -424,25 +417,15 @@ int page_replacement_init(FILE *fp, int mech)
       if (err)
         return -1;
     }
-    
   }
 
   fseek(fp, 0, SEEK_SET); /* reset at beginning */
-
+  printf("init end line\n");
   /* init replacement specific data */
   pt_replace_init[mech](fp);
 
   return 0;
 }
-
-/**********************************************************************
-
-    Function    : process_create
-    Description : Initialize process's task structure
-    Inputs      : pid - id (and index) of process
-    Outputs     : 0 if successful, <0 otherwise
-
-***********************************************************************/
 
 //process_create
 //Initialize process's task structure
@@ -503,17 +486,23 @@ int get_memory_access(FILE *fp, int *pid, unsigned int *vaddr, int *op, int *eof
   *op = 0; /* read */
 
   /* create processes, including initial page table */
-  if (fscanf(fp, "%d %x\n", pid, vaddr) == 2){
+  if (fscanf(fp, "%d %x\n", pid, vaddr) == 2)
+  {
     ;
-  }else{
+  }
+  else
+  {
     *eof = 1;
   }
   if (*eof != 1)
   {
     /* write: for certain addresses (< 0x200(int 512)) */
-    if ((*vaddr - ((*vaddr / PAGE_SIZE) * PAGE_SIZE)) < 0x200)
+    if ((*vaddr - ((*vaddr / PAGE_SIZE) * PAGE_SIZE)) < 0x1000)
     {
+
+      //write into memory
       *op = 1;
+
       printf("=== get_memory_access: process %d writes at 0x%x\n", *pid, *vaddr);
     }
     else
@@ -524,7 +513,6 @@ int get_memory_access(FILE *fp, int *pid, unsigned int *vaddr, int *op, int *eof
 
   return err;
 }
-
 
 //context_switch
 //Switch from one process id to another
@@ -542,19 +530,13 @@ int context_switch(int pid)
   return 0;
 }
 
-/**********************************************************************
-
-    Function    : tlb_flush
-    Description : set the TLB entries to TLB_INVALID
-    Inputs      : none
-    Outputs     : 1 if hit, 0 if miss
-
-***********************************************************************/
-
+//tlb_flush
+//set the TLB entries to TLB_INVALID
+//1 if hit, 0 if miss
 int tlb_flush(void)
 {
   int i;
-
+  MT = 0;
   for (i = 0; i < TLB_ENTRIES; i++)
   {
     tlb[i].page = TLB_INVALID;
@@ -590,16 +572,19 @@ int tlb_resolve_addr(unsigned int vaddr, unsigned int *paddr, int op)
     if (tlb[i].page == page)
     {
       //if vaddr, paddr existing, then MT = 1;
-      insertArray(&arr,*paddr);  
-      
+
+      MT = 1;
       *paddr = tlb[i].frame * PAGE_SIZE + vaddr - page * PAGE_SIZE;
       printf("tlb_resolve_addr: hit -- vaddr: 0x%x; paddr: 0x%x\n", vaddr, *paddr);
       current_pt[tlb[i].page].ct++;
       tlb[i].op = op;
       hardware_update_pageref(&current_pt[page], op);
-      return 1;
+
+      return 1; /* hit */
     }
   }
+  MT = 0;
+  TPI++;
   return 0; /* miss */
 }
 
@@ -624,6 +609,7 @@ int tlb_update_pageref(int frame, int page, int op)
   {
     if (tlb[i].frame == frame)
     {
+      MT = 0;
       tlb[i].page = page;
       tlb[i].op = op;
       return 0;
@@ -635,13 +621,14 @@ int tlb_update_pageref(int frame, int page, int op)
   {
     if (tlb[i].page == TLB_INVALID)
     {
+      MT = 0;
       tlb[i].page = page;
       tlb[i].frame = frame;
       tlb[i].op = op;
       return 0;
     }
   }
-
+  MT = 0;
   /* or pick any entry to toss -- random entry */
   i = random() % TLB_ENTRIES;
   tlb[i].page = page;
@@ -665,7 +652,7 @@ int tlb_update_pageref(int frame, int page, int op)
 
 int pt_resolve_addr(unsigned int vaddr, unsigned int *paddr, int *valid, int op)
 {
-  /* Task #2 */
+  
   unsigned int page = (vaddr / PAGE_SIZE);
   if (current_pt[page].bits)
   {
@@ -701,7 +688,7 @@ int pt_demand_page(int pid, unsigned int vaddr, unsigned int *paddr, int op, int
   unsigned int page = (vaddr / PAGE_SIZE);
   frame_t *f = (frame_t *)NULL;
   int other_pid;
-  
+
   //page fault increase
   pfs++;
 
@@ -712,9 +699,9 @@ int pt_demand_page(int pid, unsigned int vaddr, unsigned int *paddr, int op, int
   /* NOTE: maintain a free frame list */
   for (i = 0; i < PHYSICAL_FRAMES; i++)
   {
-    
+
     //test
-     printf("check %d frame\n",i);
+    printf("check %d frame\n", i);
     if (!physical_mem[i].allocated)
     {
       f = &physical_mem[i];
@@ -726,20 +713,19 @@ int pt_demand_page(int pid, unsigned int vaddr, unsigned int *paddr, int op, int
     }
 
     //Total frames calculate
-     TF = TF + physical_mem[i].number;
-     OF = OF + physical_mem[i].allocated;
-     AP = AP + physical_mem[i].page;
-
+    TF = TF + physical_mem[i].number;
+    OF = OF + physical_mem[i].allocated;
+    AP = AP + physical_mem[i].page;
   }
-   printf("Finished checking\n");
+  printf("Finished checking\n");
 
   /* if no free frame, run page replacement */
   if (f == NULL)
   {
     /* global page replacement */
-     printf("pt_choose_victim: \n");
+    printf("pt_choose_victim: \n");
     pt_choose_victim[mech](&other_pid, &f);
-     printf("other-pid: %d\n", other_pid);
+    printf("other-pid: %d\n", other_pid);
     pt_invalidate_mapping(other_pid, f->page);
     pt_alloc_frame(pid, f, &current_pt[page], op, mech); /* alloc for read/write */
     printf("pt_demand_page: replace -- pid: %d; vaddr: 0x%x; victim frame num: %d\n",
@@ -799,7 +785,9 @@ int pt_invalidate_mapping(int pid, int page)
     Outputs     : 0 if successful, -1 otherwise
 
 ***********************************************************************/
-
+//pt_write_frame
+//write frame to swap
+//0 if successful, -1 otherwise
 int pt_write_frame(frame_t *f)
 {
   /* collect some stats */
@@ -820,7 +808,9 @@ int pt_write_frame(frame_t *f)
     Outputs     : 0 if successful, -1 otherwise
 
 ***********************************************************************/
-
+//pt_alloc_frame
+//alloc frame for this virtual page
+//0 if successful, -1 otherwise
 int pt_alloc_frame(int pid, frame_t *f, ptentry_t *ptentry, int op, int mech)
 {
   /* Task #3 */
@@ -862,25 +852,5 @@ int hardware_update_pageref(ptentry_t *ptentry, int op)
     ptentry->bits |= DIRTYBIT;
   }
 
-  return 0;
-}
-
-
-
-int hit_check(DArray da, unsigned int *paddr){
-
-  for(int i = 0; i < da.size; i++ ){
-    if(da.array[i] == *paddr){
-      MT = 1;
-      return 1;
-    }
-  }
-
-  // pid_node addr;
-  // addr.key = vaddr;
-  
-  // void *result;
-  // struct pid_node *existing;// if miss, keep the vpn in the node,
-  // *(struct pid_node **)result;
   return 0;
 }

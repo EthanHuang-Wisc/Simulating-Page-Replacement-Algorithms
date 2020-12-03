@@ -7,8 +7,8 @@
 
 
 typedef struct pid_node {
-     int key; // index of pid
-     int pid;
+     int pid; // index of pid
+     long pos;
 }pid_node;
 
 

@@ -13,7 +13,8 @@
 #include <pthread.h>
 #include <sched.h>
 #include <time.h>
-
+#include <math.h>
+#include <getopt.h>
 #endif
 
 
@@ -88,7 +89,7 @@ extern frame_t *physical_mem;
 extern ptentry_t *current_pt;
 
 /*data parsing method*/
-int parsedata(FILE f, int algo);
+int parsedata(char *finput, char *algo);
 
 /* initialization */
 extern int page_replacement_init( FILE *fp, int mech );
