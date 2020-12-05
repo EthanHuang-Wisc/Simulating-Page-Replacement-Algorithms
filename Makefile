@@ -1,46 +1,45 @@
-#
+# Simulating Page Replacement Algorithms
 # File          : Makefile
 # Description   : Build file for CS537 project 4
 
+537pfsim-fifo: $(FIFOPT-TARGETS)
+537pfsim-lru: $(LRUPT-TARGETS)
 
-# Environment Setup
-LIBDIRS=-L. 
-INCLUDES=-I.
-CC=gcc 
-CFLAGS=-c $(INCLUDES) -g -Wall
-LINK=gcc -g
-LDFLAGS=$(LIBDIRS)
-AR=ar rc
-RANLIB=ranlib
+all : 537pfsim-fifo 537pfsim-lru 537pfsim-clock
 
-# Suffix rules
-.c.o :
-	${CC} ${CFLAGS} $< -o $@
+537pfsim-fifo: sim-fifo.o pt/pagetable.o algo/mfu.o algo/clock.o algo/enh.o algo/fifo.o algo/lru.o utils.o
+	gcc -o 537pfsim-fifo sim-fifo.o pt/pagetable.o algo/mfu.o algo/clock.o algo/enh.o algo/fifo.o algo/lru.o utils.o
 
-#
-# Setup builds
+537pfsim-lru: sim-lru.o pt/pagetable.o algo/mfu.o algo/clock.o algo/enh.o algo/fifo.o algo/lru.o utils.o
+	gcc -o 537pfsim-lru sim-lru.o pt/pagetable.o algo/mfu.o algo/clock.o algo/enh.o algo/fifo.o algo/lru.o utils.o
 
-PT-TARGETS=sim
-#CSE473LIB=
-#CSE473LIBOBJS=
+537pfsim-clock: sim-clock.o pt/pagetable.o algo/mfu.o algo/clock.o algo/enh.o algo/fifo.o algo/lru.o utils.o
+	gcc -o 537pfsim-clock sim-clock.o pt/pagetable.o algo/mfu.o algo/clock.o algo/enh.o algo/fifo.o algo/lru.o utils.o
 
-# proj lib
-#LIBS=
+pagetable.o: pt/pagetable.o pt/pagetable.h
+	gcc -c pt/pagetable.o
 
+clock.o: algo/clock.c pt/pagetable.h
+	gcc -c algo/clock.c
 
-# Project Protections
+fifo.o: algo/fifo.c pt/pagetable.h
+	gcc -c algo/fifo.c
 
-sim : $(PT-TARGETS)
+lru.o: algo/lru.c pt/pagetable.h
+	gcc -c algo/lru.c
 
-sim :  sim.o pagetable.o mfu.o clock.o enh.o fifo.o lru.o utils.o
-	$(LINK) $(LDFLAGS) sim.o pagetable.o mfu.o clock.o enh.o fifo.o lru.o utils.o -o $@
+enh.o: algo/enh.c pt/pagetable.h
+	gcc -c algo/enh.c         
 
-#lib$(CSE473LIB).a : $(CSE473LIBOBJS)
-#	$(AR) $@ $(CSE473LIBOBJS)
-#	$(RANLIB) $@
+utils.o: utils.c utils.h
+	gcc -c utils.c
+
+537pfsim-fifo.o: 537pfsim-fifo.c pt/pagetable.h
+	gcc -c 537pfsim-fifo.c
+
+537pfsim-lru.o: 537pfsim-lru.c pt/pagetable.h
+	gcc -c 537pfsim-lru.c
+
 
 clean:
-	rm -f *.o *~ $(TARGETS).a $(PT-TARGETS)
-	#rm -f *.o *~ $(TARGETS) $(LIBOBJS) lib$(CSE473LIB).a 
-
-
+	rm -f *.o *~ algo/*.o algo/*~ pt/*.o pt/*.~  537pfsim-fifo 537pfsim-lru 537pfsim-clock
