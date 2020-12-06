@@ -41,7 +41,7 @@ clockalgo_t *page_list;
 // 0 if successful, -1 otherwise
 int init_clock( FILE *fp )
 {
-  printf("initiate clock...\n");
+  //printf("initiate clock...\n");
   page_list = (clockalgo_t *)malloc(sizeof(clockalgo_t));
   page_list->first = NULL;
   return 0;
@@ -53,14 +53,14 @@ int init_clock( FILE *fp )
 void print_clock(){
   clock_entry_t *clock_ptr=page_list->first;
   int first_access=1;
-  printf("clock_page_list: ----");
+  //printf("clock_page_list: ----");
   // while(mfu_ptr->ptentry->frame!=page_list->first->ptentry->frame||first_access){
    while(clock_ptr!=page_list->first||first_access){
     first_access=0;
-    printf("frame(%d)_ref_bits=0x%u\t",clock_ptr->ptentry->frame,clock_ptr->ptentry->bits);
+    //printf("frame(%d)_ref_bits=0x%u\t",clock_ptr->ptentry->frame,clock_ptr->ptentry->bits);
     clock_ptr=clock_ptr->next;
   }
-  printf("----\n");
+  //printf("----\n");
 }
 
 
@@ -75,11 +75,11 @@ int replace_clock( int *pid, frame_t **victim )
   /* return info on victim */
   while((first->ptentry->bits&REFBIT)==REFBIT)
   {
-    printf("replace_clock: look at frame %d bits 0x%d\n",first->ptentry->frame,first->ptentry->bits);
+    //printf("replace_clock: look at frame %d bits 0x%d\n",first->ptentry->frame,first->ptentry->bits);
     first->ptentry->bits-=REFBIT;
     first=first->next;
   }
-  printf("replace_clock: look at frame %d bits 0x%d\n",first->ptentry->frame,first->ptentry->bits);
+  //printf("replace_clock: look at frame %d bits 0x%d\n",first->ptentry->frame,first->ptentry->bits);
   *victim = &physical_mem[first->ptentry->frame];
   *pid = first->pid;
 
@@ -109,7 +109,7 @@ int replace_clock( int *pid, frame_t **victim )
 int update_clock( int pid, frame_t *f )
 {
   
-   printf("update_clock: pid=%d, frame=%u\n",pid,f->number);
+  // printf("update_clock: pid=%d, frame=%u\n",pid,f->number);
   
   ptentry_t* pid_s_pt=&processes[pid].pagetable[f->page];
   clock_entry_t *list_entry=( clock_entry_t *)malloc(sizeof(clock_entry_t)* VIRTUAL_PAGES);

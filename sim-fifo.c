@@ -27,11 +27,10 @@ int main(int argc, char **argv)
 {
     int opt;
     unsigned int PHYSICAL_MEMORY = 0x400 * 0x400;
-    //FILE *tfp = stdin;
     int ret = 0;
     int MEM;
     int t = 0;
-    char *foput = "fifoStats.txt";
+    //char *foput = "fifoStats.txt";
     //for FIFO
     char *replacement_alg = "1";
 
@@ -44,7 +43,7 @@ int main(int argc, char **argv)
         exit(-1);
     }
 
-    printf("main in \n");
+    //printf("main in \n");
     while ((opt = getopt(argc, argv, "m:p:")) != -1)
     {
 
@@ -71,11 +70,6 @@ int main(int argc, char **argv)
         PHYSICAL_FRAMES = (abs)(PHYSICAL_MEMORY / PAGE_SIZE);
 
     tracefile = argv[argc-1];
-    printf("tracefile = %s\n", tracefile);
-    printf("Physical Memory = %d, PAGE_SIZE = %d \n", PHYSICAL_MEMORY, PAGE_SIZE);
-
-    //PHYSICAL_FRAMES =  PHYSICAL_MEMORY/ PAGE_SIZE;
-    printf("PHYSICAL_FRAMES = %d\n",  PHYSICAL_FRAMES);
     
     //assert by allowance value
     assert(PAGE_SIZE>0);
@@ -83,14 +77,8 @@ int main(int argc, char **argv)
     
     if (tracefile != NULL)
     {
-        ret = parse_data(tracefile,foput,replacement_alg);
+        ret = parse_data(tracefile, replacement_alg);
     }
 
     return ret;
 }
-
-
-//change file read order
-// FILE *reorder(FILE inputfile){
-//     return inputfile;
-// }

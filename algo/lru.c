@@ -39,7 +39,7 @@ lru_t *page_list;
 //0 if successful, -1 otherwise
 int init_lru(FILE *fp)
 {
-    printf("initiate lru...\n");
+    //printf("initiate lru...\n");
     page_list = (lru_t *)malloc(sizeof(lru_t));
     page_list->first = NULL;
     return 0;
@@ -51,15 +51,15 @@ void print_lru()
 {
     lru_entry_t *lru_ptr = page_list->first;
     int first_access = 1;
-    printf("lru_page_list: ----");
+    //printf("lru_page_list: ----");
     // while(lru_ptr->ptentry->frame!=page_list->first->ptentry->frame||first_access){
     while (lru_ptr != page_list->first || first_access)
     {
         first_access = 0;
-        printf("frame(%d)_ct=%d\t", lru_ptr->ptentry->frame, lru_ptr->ptentry->ct);
+        //printf("frame(%d)_ct=%d\t", lru_ptr->ptentry->frame, lru_ptr->ptentry->ct);
         lru_ptr = lru_ptr->next;
     }
-    printf("----\n");
+    //printf("----\n");
 }
 
 
@@ -87,7 +87,7 @@ int replace_lru(int *pid, frame_t **victim)
         int first_access = 1;
         while (lru_ptr != page_list->first || first_access)
         {
-            printf("replace_lru: reference counter for page #%d (pid: %d) is %d\n", lru_ptr->ptentry->number, lru_ptr->pid, lru_ptr->ptentry->ct);
+            //printf("replace_lru: reference counter for page #%d (pid: %d) is %d\n", lru_ptr->ptentry->number, lru_ptr->pid, lru_ptr->ptentry->ct);
             first_access = 0;
             if (lru_ptr->ptentry->ct < min_count)
             {
@@ -98,7 +98,7 @@ int replace_lru(int *pid, frame_t **victim)
             }
             lru_ptr = lru_ptr->next;
         }
-        printf("replace_lru: choose frame #%d (associated with page #%d, pid: %d) as the victim\n", victim_ptr->ptentry->frame, victim_ptr->ptentry->number, victim_ptr->pid);
+        //printf("replace_lru: choose frame #%d (associated with page #%d, pid: %d) as the victim\n", victim_ptr->ptentry->frame, victim_ptr->ptentry->number, victim_ptr->pid);
         /* remove from list */
         if (victim_ptr == page_list->first && page_list->first->next == page_list->first)
         {
@@ -130,7 +130,7 @@ int replace_lru(int *pid, frame_t **victim)
 int update_lru(int pid, frame_t *f)
 {
     // printf("update_lru: pid=%d, frame=%d\n",pid,f->number);
-    printf("update_lru: added new mapping: page#%d --- frame#%u\n", f->page, f->number);
+    //printf("update_lru: added new mapping: page#%d --- frame#%u\n", f->page, f->number);
 
     
     ptentry_t *pid_s_pt = &processes[pid].pagetable[f->page];

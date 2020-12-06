@@ -85,7 +85,7 @@ extern frame_t *physical_mem;
 extern ptentry_t *current_pt;
 
 /*data parsing method*/
-int parse_data(char *finput,char *foutput, char *algo);
+int parse_data(char *finput, char *algo);
 
 /* initialization */
 extern int page_replacement_init( FILE *fp, int mech );
@@ -101,8 +101,7 @@ extern int pt_invalidate_mapping( int pid, int page );
 extern int get_memory_access( FILE *fp, int *pid, unsigned long *vaddr, int *op, int *eof );
 extern int context_switch( int pid );
 extern int hardware_update_pageref( ptentry_t *ptentry, int op );
-extern int write_results( FILE *out );
-extern int stats_result(FILE *out);
+extern int stats_result();
 
 /* TLB functions */
 extern int tlb_resolve_addr( unsigned long vaddr, unsigned long *paddr, int op );
