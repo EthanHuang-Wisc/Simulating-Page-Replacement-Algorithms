@@ -36,14 +36,6 @@ typedef struct clock {
 
 clockalgo_t *page_list;
 
-/**********************************************************************
-
-    Function    : init_clock
-    Description : initialize clock-chance list
-    Inputs      : 
-    Outputs     : 0 if successful, -1 otherwise
-
-***********************************************************************/
 
 //initialize clock list
 //fp - input file of data
@@ -57,12 +49,7 @@ int init_clock( FILE *fp )
 }
 
 
-/**********************************************************************
 
-    Function    : print_clock
-    Description : print the containers
-
-***********************************************************************/
 //print the containers
 void print_clock(){
   clock_entry_t *clock_ptr=page_list->first;
@@ -77,16 +64,9 @@ void print_clock(){
   printf("----\n");
 }
 
-/**********************************************************************
 
-    Function    : replace_clock
-    Description : choose victim based on clock chance algorithm (first with ref == 0)
-    Inputs      : pid - process id of victim frame 
-                  victim - frame assigned from fifo -- to be replaced
-    Outputs     : 0 if successful, -1 otherwise
-
-***********************************************************************/
 //choose victim based on clock chance algorithm (first with ref == 0)
+//0 if successful, -1 otherwise
 int replace_clock( int *pid, frame_t **victim )
 {
   
@@ -125,7 +105,8 @@ int replace_clock( int *pid, frame_t **victim )
     Outputs     : 0 if successful, -1 otherwise
 
 ***********************************************************************/
-
+//update clock chance on allocation 
+//0 if successful, -1 otherwise
 int update_clock( int pid, frame_t *f )
 {
   

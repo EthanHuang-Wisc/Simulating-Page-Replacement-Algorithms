@@ -31,15 +31,9 @@ typedef struct lru
 
 lru_t *page_list;
 
-/**********************************************************************
 
-    Function    : init_lru
-    Description : initialize lru list
-    Inputs      : fp - input file of data
-    Outputs     : 0 if successful, -1 otherwise
-
-***********************************************************************/
-
+//initialize lru list
+//0 if successful, -1 otherwise
 int init_lru(FILE *fp)
 {
     printf("initiate lru...\n");
@@ -48,13 +42,8 @@ int init_lru(FILE *fp)
     return 0;
 }
 
-/**********************************************************************
 
-    Function    : print_lru
-    Description : print the containers
-
-***********************************************************************/
-
+//print the containers
 void print_lru()
 {
     lru_entry_t *lru_ptr = page_list->first;
@@ -70,17 +59,10 @@ void print_lru()
     printf("----\n");
 }
 
-/**********************************************************************
 
-    Function    : replace_lru
-    Description : choose victim based on lru algorithm, take the frame 
-                  associated the page with the largest count as victim 
-    Inputs      : pid - process id of victim frame 
-                  victim - frame assigned from fifo -- to be replaced
-    Outputs     : 0 if successful, -1 otherwise
-
-***********************************************************************/
-
+//choose victim based on lru algorithm, take the frame 
+// associated the page with the largest count as victim
+//0 if successful, -1 otherwise
 int replace_lru(int *pid, frame_t **victim)
 {
     // replace the least recently used page.
@@ -138,19 +120,10 @@ int replace_lru(int *pid, frame_t **victim)
     return 0;
 }
 
-/**********************************************************************
 
-    Function    : update_lru
-    Description : create container for the newly allocated frame (and 
-                  associated page), and insert it to the end (with respect
-                  to page_list->first) of page list 
-    Inputs      : pid - process id
-                  f - frame
-    Outputs     : 0 if successful, -1 otherwise
-
-***********************************************************************/
 //create container for the newly allocated frame (and 
-//associated page), and insert it to the end (with respect
+//associated page), and insert it to the end (with respect to page_list->first) of page list
+//0 if successful, -1 otherwise
 int update_lru(int pid, frame_t *f)
 {
     // printf("update_lru: pid=%d, frame=%d\n",pid,f->number);
