@@ -42,7 +42,7 @@ clockalgo_t *page_list;
 int init_clock( FILE *fp )
 {
   //printf("initiate clock...\n");
-  page_list = (clockalgo_t *)malloc(sizeof(clockalgo_t)*2);
+  page_list = (clockalgo_t *)malloc(sizeof(clockalgo_t)*VIRTUAL_PAGES);
   page_list->first = NULL;
   return 0;
 }
@@ -104,7 +104,7 @@ int update_clock( int pid, frame_t *f )
   // printf("update_clock: pid=%d, frame=%u\n",pid,f->number);
   
   ptentry_t* pid_s_pt=&processes[pid].pagetable[f->page];
-  clock_entry_t *list_entry=( clock_entry_t *)malloc(sizeof(clock_entry_t)*2);
+  clock_entry_t *list_entry=( clock_entry_t *)malloc(sizeof(clock_entry_t)*VIRTUAL_PAGES);
   list_entry->ptentry = pid_s_pt;
   list_entry->pid = pid;
   if(page_list->first==NULL)

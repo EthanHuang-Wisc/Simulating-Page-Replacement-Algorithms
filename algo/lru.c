@@ -135,7 +135,7 @@ int update_lru(int pid, frame_t *f)
     
     ptentry_t *pid_s_pt = &processes[pid].pagetable[f->page];
     
-    lru_entry_t *list_entry = (lru_entry_t *)malloc(sizeof(lru_entry_t)*2);
+    lru_entry_t *list_entry = (lru_entry_t *)malloc(sizeof(lru_entry_t)*VIRTUAL_PAGES);
     list_entry->ptentry = pid_s_pt;
     list_entry->pid = pid;
     if (page_list->first == NULL)
