@@ -150,7 +150,7 @@ int parse_data(char *finput, char *algo)
   //   return -1;
   // }
   clock_gettime(CLOCK_REALTIME, &simEnd);
-  RT = abs(simEnd.tv_nsec) - abs(simStart.tv_nsec);
+  RT = simEnd.tv_nsec - simStart.tv_nsec;
   free(physical_mem);
 
   stats_result();
