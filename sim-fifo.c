@@ -7,7 +7,7 @@
 #define USAGE "USAGE: 537pfsim-fifo  -p pagesize -m physical_memory tracefile\n"
 int PAGE_SIZE = 0x1000; //default value
 int PHYSICAL_FRAMES = 0x100; // default value
-int VIRTUAL_PAGES = 32;
+int VIRTUAL_PAGES = 0x014;//32 is fine here
 char *tracefile = NULL;
 
 

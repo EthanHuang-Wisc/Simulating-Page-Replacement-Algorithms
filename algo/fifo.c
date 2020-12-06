@@ -39,7 +39,7 @@ fifo_t *frame_list;
 //sucessful if return 0
 int init_fifo( FILE *fp )
 {
-  frame_list = (fifo_t *)malloc(sizeof(fifo_t)*VIRTUAL_PAGES);
+  frame_list = (fifo_t *)malloc(sizeof(fifo_t));
   
   return 0;
 }
