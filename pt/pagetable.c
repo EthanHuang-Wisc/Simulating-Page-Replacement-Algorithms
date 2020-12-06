@@ -29,7 +29,7 @@ int current_pid = 0;
 int swaps = 0;           /* swaps to disk */
 int invalidates = 0;     /* reassign page w/o swap */
 int pfs = 0;             /* all page faults */
-int memory_accesses = 0; /* accesses that miss TLB but hit memory */
+int memory_accesses = 0; /* accesses that miss TLB but hit memory*/
 int total_accesses = 0;  /* all accesses*/
 double AMU = 0;       /* The value is a (total occupied)/(clock) */
 long double ARP = 0;  /* This value is an average of the number of processes that are running */
@@ -164,7 +164,7 @@ int stats_result()
   AMU = (double)TF / (double)PHYSICAL_FRAMES;
   int rp = memory_accesses - swaps;
   ARP = (double)rp / (double)RT;
-  int Miss = memory_accesses;
+  int Miss = total_accesses - memory_accesses;
   printf("Average Memory Utilization (AMU): %f\n", AMU);
   printf("Average Runable Processes (ARP): %.8Lf \n", ARP);
   printf("Total Memory References (TMR): %d  \n", total_accesses);
