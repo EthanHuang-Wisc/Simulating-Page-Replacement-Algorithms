@@ -1,0 +1,9 @@
+++++++++++++++++++++ Stats for Result ++++++++++++++++++
+Memory Access: 113, Occupied Frames: 29, Total Frames: 256.
+Running processes #:  1584
+Average Memory Utilization (AMU): 0.000853
+Average Runable Processes (ARP): 0.00000043 
+Total Memory References (TMR): 1555  
+Total Page Ins (TPI): 171
+Running Time: 265519800 ns
+++++++++++++++++++++ END of This Line ++++++++++++++++++

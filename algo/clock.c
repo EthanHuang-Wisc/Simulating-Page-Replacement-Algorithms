@@ -1,7 +1,6 @@
-
-//clock.c
-//This is clock chance page replacement algorithm
-//Ethan Huang
+//Filename: clock.c
+//Author: Ethan Huang
+//Partner: NONE
 
 /* Include Files */
 #include <stdio.h>

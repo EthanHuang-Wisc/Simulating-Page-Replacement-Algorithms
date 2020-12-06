@@ -1,3 +1,6 @@
+//Filename: lru.c
+//Author: Ethan Huang
+//Partner: NONE
 
 #include <stdio.h>
 #include <unistd.h>

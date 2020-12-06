@@ -1,4 +1,5 @@
-//fifosim.c
+//sim-fifo.c
+//Filename: sim-fifo.c
 //Author: Ethan Huang
 //Partner: NONE
 
@@ -7,7 +8,7 @@
 #define USAGE "USAGE: 537pfsim-fifo  -p pagesize -m physical_memory tracefile\n"
 int PAGE_SIZE = 0x1000; //default value
 int PHYSICAL_FRAMES = 0x100; // default value
-int VIRTUAL_PAGES = 0x014;//32 is fine here
+int VIRTUAL_PAGES = 20;//32 is fine here
 char *tracefile = NULL;
 
 
@@ -32,7 +33,7 @@ int main(int argc, char **argv)
     int t = 0;
     char *foput = "fifoStats.txt";
     //for FIFO
-    char *replacement_alg = "3";
+    char *replacement_alg = "1";
 
     // /* Check for arguments */
     if (argc < 4)
@@ -82,7 +83,7 @@ int main(int argc, char **argv)
     
     if (tracefile != NULL)
     {
-        ret = parsedata(tracefile,foput,replacement_alg);
+        ret = parse_data(tracefile,foput,replacement_alg);
     }
 
     return ret;

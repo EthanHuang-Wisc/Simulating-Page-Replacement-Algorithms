@@ -34,5 +34,5 @@ void delete_pidnode(void **root, int key);
 void free_pidnode(void *ptr);
 void add_pidnode(void **root, struct pid_node *node);
 void exit_with_message(char *message);
-struct pid_node *make_node(unsigned int key, unsigned int pid);
+struct pid_node *make_pidnode( int pid,  long pos);
 int compare(const void *a, const void *b);

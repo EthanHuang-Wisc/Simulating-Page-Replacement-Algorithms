@@ -1,13 +1,13 @@
-//lrusim.c
+//Filename: sim-lru.c
 //Author: Ethan Huang
 //Partner: NONE
 
 
 #include "pt/pagetable.h"
-#define USAGE "USAGE: 537pfsim-lru   -p pagesize -m physical_memory tracefile\n"
+#define USAGE "USAGE: 537pfsim-lru -p pagesize -m physical_memory tracefile\n"
 int PAGE_SIZE = 0x1000; //default value
 int PHYSICAL_FRAMES = 0x100; // default value
-int VIRTUAL_PAGES = 0x014; //20
+int VIRTUAL_PAGES = 20; //20
 char *tracefile = NULL;
 
 
@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     int t = 0;
     char *foput = "lruStats.txt";
     //for LRU
-    char *replacement_alg = "4";
+    char *replacement_alg = "2";
 
     // /* Check for arguments */
     if (argc < 4)
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
     
     if (tracefile != NULL)
     {
-        ret = parsedata(tracefile,foput,replacement_alg);
+        ret = parse_data(tracefile,foput,replacement_alg);
     }
 
     return ret;
