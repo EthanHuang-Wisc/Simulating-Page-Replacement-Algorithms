@@ -51,11 +51,15 @@ int main(int argc, char **argv)
         {
         case 'p':
             PAGE_SIZE = (int)strtoul(optarg, NULL, 10);
-            t = 1;
+            if(PAGE_SIZE != 0){
+                t = 1;
+            }else{
+                PAGE_SIZE = 0x1000;
+            }
             break;
         case 'm':
             MEM = (int)strtoul(optarg, NULL, 10);
-            t = 1;
+            if(MEM != 0) t = 1;
             break;
         default:
             fprintf(stderr, "missing or bad command line arguments\n");

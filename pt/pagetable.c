@@ -164,11 +164,11 @@ int stats_result()
   AMU = (double)TF / (double)PHYSICAL_FRAMES;
   int rp = memory_accesses - swaps;
   ARP = (double)rp / (double)RT;
-
+  int Miss = AP - TPI;
   printf("Average Memory Utilization (AMU): %f\n", AMU);
   printf("Average Runable Processes (ARP): %.8Lf \n", ARP);
   printf("Total Memory References (TMR): %d  \n", total_accesses);
-  printf("Total Page Ins (TPI): %d\n", pfs);
+  printf("Total Page Ins (TPI): %d\n", Miss);
   printf("Running Time: %lu ns\n", RT);
   return 0;
 }
@@ -309,7 +309,7 @@ int tlb_update_pageref(int frame, int page, int op)
     if (tlb[i].frame == frame)
     {
       MT = 0;
-      TPI++;
+      //TPI++;
       tlb[i].page = page;
       tlb[i].op = op;
       return 0;
@@ -322,7 +322,7 @@ int tlb_update_pageref(int frame, int page, int op)
     if (tlb[i].page == TLB_INVALID)
     {
       MT = 0;
-      TPI++;
+      //TPI++;
       tlb[i].page = page;
       tlb[i].frame = frame;
       tlb[i].op = op;
@@ -330,7 +330,7 @@ int tlb_update_pageref(int frame, int page, int op)
     }
   }
   MT = 0;
-  TPI++;
+  //TPI++;
   /* or pick any entry to toss -- random entry */
   i = random() % TLB_ENTRIES;
   tlb[i].page = page;
@@ -412,7 +412,6 @@ int pt_demand_page(int pid, unsigned long vaddr, unsigned long *paddr, int op, i
   /* if no free frame, run page replacement */
   if (f == NULL)
   {
-    TPI++;
     /* global page replacement */
     //printf("pt_choose_victim: \n");
     pt_choose_victim[mech](&other_pid, &f);
