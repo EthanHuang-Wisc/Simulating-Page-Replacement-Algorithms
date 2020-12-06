@@ -170,7 +170,7 @@ int stats_result()
   printf("Average Memory Utilization (AMU): %f\n", AMU);
   printf("Average Runable Processes (ARP): %.8Lf \n", ARP);
   printf("Total Memory References (TMR): %d  \n", total_accesses);
-  printf("Total Page Ins (TPI): %d\n", TPI);
+  printf("Total Page Ins (TPI): %d\n", pfs);
   printf("Running Time: %lu ns\n", RT);
   return 0;
 }
