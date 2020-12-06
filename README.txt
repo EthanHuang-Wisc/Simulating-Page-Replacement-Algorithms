@@ -39,9 +39,6 @@ The goal of this assignment is to evaluate several page replacement algorithms. 
     USAGE:    
     e.g. $ ./537pfsim-lru -p 8192 -m 2 tracefile1
 
-#Testing time
-    
-    
 
 #Author
 Ethan Huang
