@@ -40,7 +40,7 @@ lru_t *page_list;
 int init_lru(FILE *fp)
 {
     //printf("initiate lru...\n");
-    page_list = (lru_t *)malloc(sizeof(lru_t)* VIRTUAL_PAGES);
+    page_list = (lru_t *)malloc(sizeof(lru_t));
     page_list->first = NULL;
     return 0;
 }

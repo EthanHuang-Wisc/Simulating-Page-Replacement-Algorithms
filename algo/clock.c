@@ -42,7 +42,7 @@ clockalgo_t *page_list;
 int init_clock( FILE *fp )
 {
   //printf("initiate clock...\n");
-  page_list = (clockalgo_t *)malloc(sizeof(clockalgo_t)* VIRTUAL_PAGES);
+  page_list = (clockalgo_t *)malloc(sizeof(clockalgo_t));
   page_list->first = NULL;
   return 0;
 }
