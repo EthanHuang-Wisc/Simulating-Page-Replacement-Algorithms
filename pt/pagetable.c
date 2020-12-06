@@ -385,7 +385,7 @@ int pt_demand_page(int pid, unsigned long vaddr, unsigned long *paddr, int op, i
   //printf("page fault increased \n");
   //miss or hit siginal, 0 for msis
   MT = 0;
-  TPI++;
+  //TPI++;
   /* find a free frame */
   /* NOTE: maintain a free frame list */
   for (i = 0; i < PHYSICAL_FRAMES; i++)

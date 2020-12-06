@@ -42,7 +42,7 @@ clockalgo_t *page_list;
 int init_clock( FILE *fp )
 {
   //printf("initiate clock...\n");
-  page_list = (clockalgo_t *)malloc(sizeof(clockalgo_t));
+  page_list = (clockalgo_t *)malloc(sizeof(clockalgo_t)* VIRTUAL_PAGES);
   page_list->first = NULL;
   return 0;
 }
@@ -95,15 +95,7 @@ int replace_clock( int *pid, frame_t **victim )
 }
 
 
-/**********************************************************************
 
-    Function    : update_clock
-    Description : update clock chance on allocation 
-    Inputs      : pid - process id
-                  f - frame
-    Outputs     : 0 if successful, -1 otherwise
-
-***********************************************************************/
 //update clock chance on allocation 
 //0 if successful, -1 otherwise
 int update_clock( int pid, frame_t *f )
