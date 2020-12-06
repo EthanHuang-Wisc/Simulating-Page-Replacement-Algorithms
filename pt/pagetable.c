@@ -414,6 +414,7 @@ int pt_demand_page(int pid, unsigned long vaddr, unsigned long *paddr, int op, i
   /* if no free frame, run page replacement */
   if (f == NULL)
   {
+    TPI++;
     /* global page replacement */
     //printf("pt_choose_victim: \n");
     pt_choose_victim[mech](&other_pid, &f);
