@@ -37,7 +37,7 @@ double AMU = 0;       /* The value is a (total occupied)/(clock) */
 long double ARP = 0;  /* This value is an average of the number of processes that are running */
 unsigned int TPI = 0; /* Total number of misses */
 unsigned long RT = 0; /* This is the total number of clock ticks for the simulator run. */
-int MT = 1;           /* a siginal to return hit or miss, hit for 1, miss for 0*/
+int MT = -1;           /* a siginal to return hit or miss, hit for 1, miss for 0*/
 int TF = 0;           /* total frames */
 int OF = 0;           /* stats of occupied frames*/
 unsigned long AP = 0; /* total process*/
@@ -311,7 +311,7 @@ int tlb_update_pageref(int frame, int page, int op)
     if (tlb[i].frame == frame)
     {
       MT = 0;
-      //TPI++;
+      TPI++;
       tlb[i].page = page;
       tlb[i].op = op;
       return 0;
@@ -324,7 +324,7 @@ int tlb_update_pageref(int frame, int page, int op)
     if (tlb[i].page == TLB_INVALID)
     {
       MT = 0;
-      //TPI++;
+      TPI++;
       tlb[i].page = page;
       tlb[i].frame = frame;
       tlb[i].op = op;
@@ -332,7 +332,7 @@ int tlb_update_pageref(int frame, int page, int op)
     }
   }
   MT = 0;
-  //TPI++;
+  TPI++;
   /* or pick any entry to toss -- random entry */
   i = random() % TLB_ENTRIES;
   tlb[i].page = page;
