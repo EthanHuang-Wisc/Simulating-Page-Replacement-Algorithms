@@ -165,7 +165,7 @@ int stats_result()
   AMU = (double)TF / (double)PHYSICAL_FRAMES;
   int rp = memory_accesses - swaps;
   ARP = (double)rp / (double)RT;
-  int Miss = total_accesses - (int)(tlb_miss_ratio * total_accesses);;
+  int Miss = (int)(tlb_miss_ratio * total_accesses);;
   printf("Average Memory Utilization (AMU): %f\n", AMU);
   printf("Average Runable Processes (ARP): %.8Lf \n", ARP);
   printf("Total Memory References (TMR): %d  \n", total_accesses);
