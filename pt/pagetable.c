@@ -161,11 +161,11 @@ int parse_data(char *finput, char *algo)
 //0 if successful, <0 otherwise
 int stats_result()
 {
-  float tlb_miss_ratio = ((float)memory_accesses / (float)(total_accesses - pfs));
+  float tlb_hit_ratio = ((float)memory_accesses / (float)(total_accesses - pfs));
   AMU = (double)TF / (double)PHYSICAL_FRAMES;
   int rp = memory_accesses - swaps;
   ARP = (double)rp / (double)RT;
-  int Miss = (int)(tlb_miss_ratio * total_accesses);;
+  int Miss = total_accesses - (int)(tlb_hit_ratio * total_accesses);
   printf("Average Memory Utilization (AMU): %f\n", AMU);
   printf("Average Runable Processes (ARP): %.8Lf \n", ARP);
   printf("Total Memory References (TMR): %d  \n", total_accesses);
