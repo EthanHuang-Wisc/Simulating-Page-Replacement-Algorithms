@@ -41,7 +41,7 @@ The goal of this assignment is to evaluate several page replacement algorithms. 
     e.g. $ ./537pfsim-lru -p 8192 -m 2 tracefile1
 
 P.S
-The running time might go 18446744073409552319 ns or more, it's not correct. Please try on more times. Thank you.
+The running time might go 18446744073409552319 ns or more, it's not correct. Please try one more times. Thank you.
 
 #Author
 Ethan Huang
