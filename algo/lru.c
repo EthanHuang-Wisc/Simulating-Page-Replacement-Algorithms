@@ -40,7 +40,7 @@ lru_t *page_list;
 int init_lru(FILE *fp)
 {
     //printf("initiate lru...\n");
-    page_list = (lru_t *)malloc(sizeof(lru_t));
+    page_list = (lru_t *)malloc(sizeof(lru_t)*2);
     page_list->first = NULL;
     return 0;
 }
@@ -135,7 +135,7 @@ int update_lru(int pid, frame_t *f)
     
     ptentry_t *pid_s_pt = &processes[pid].pagetable[f->page];
     
-    lru_entry_t *list_entry = (lru_entry_t *)malloc(sizeof(lru_entry_t)*VIRTUAL_PAGES);
+    lru_entry_t *list_entry = (lru_entry_t *)malloc(sizeof(lru_entry_t)*2);
     list_entry->ptentry = pid_s_pt;
     list_entry->pid = pid;
     if (page_list->first == NULL)
