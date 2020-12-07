@@ -39,8 +39,8 @@ fifo_t *frame_list;
 //sucessful if return 0
 int init_fifo( FILE *fp )
 {
-  //frame_list = (fifo_t *)malloc(sizeof(fifo_t)*VIRTUAL_PAGES);
-  frame_list = (fifo_t *)malloc(sizeof(fifo_t));
+  frame_list = (fifo_t *)malloc(sizeof(fifo_t)*VIRTUAL_PAGES);
+  //frame_list = (fifo_t *)malloc(sizeof(fifo_t));
   return 0;
 }
 
@@ -71,8 +71,8 @@ int update_fifo( int pid, frame_t *f )
 {
   
   /* make new list entry */
-  //fifo_entry_t *list_entry = ( fifo_entry_t *)malloc(sizeof(fifo_entry_t)*VIRTUAL_PAGES);
-  fifo_entry_t *list_entry = ( fifo_entry_t *)malloc(sizeof(fifo_entry_t));
+  fifo_entry_t *list_entry = ( fifo_entry_t *)malloc(sizeof(fifo_entry_t)*VIRTUAL_PAGES);
+  //fifo_entry_t *list_entry = ( fifo_entry_t *)malloc(sizeof(fifo_entry_t));
   list_entry->frame = f;
   list_entry->pid = pid;
   list_entry->next = NULL;
