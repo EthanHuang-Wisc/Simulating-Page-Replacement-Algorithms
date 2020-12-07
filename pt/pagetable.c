@@ -426,7 +426,8 @@ int pt_demand_page(int pid, unsigned long vaddr, unsigned long *paddr, int op, i
   }
 
   /* compute new physical addr */
-  *paddr = (f->number * PAGE_SIZE) + (vaddr % PAGE_SIZE);
+  //*paddr = (f->number * PAGE_SIZE) + (vaddr % PAGE_SIZE);
+  *paddr = (f->number * sizeof(ptentry_t)) + (vaddr % sizeof(ptentry_t));
   /* do hardware update to page */
   hardware_update_pageref(&current_pt[page], op);
   // newly allocated frame's ct is 0, and it will print out as 0, only after this step,
@@ -562,7 +563,9 @@ int tlb_resolve_addr(unsigned long vaddr, unsigned long *paddr, int op)
       //if vaddr, paddr existing, then MT = 1;
 
       MT = 1;
-      *paddr = tlb[i].frame * PAGE_SIZE + vaddr - page * PAGE_SIZE;
+      //*paddr = tlb[i].frame * PAGE_SIZE + vaddr - page * PAGE_SIZE;
+      *paddr = tlb[i].frame * sizeof(ptentry_t) + vaddr - page * sizeof(ptentry_t);
+      
       //printf("tlb_resolve_addr: hit -- vaddr: 0x%lu; paddr: 0x%lu\n", vaddr, *paddr);
       current_pt[tlb[i].page].ct++;
       tlb[i].op = op;
