@@ -348,7 +348,7 @@ int pt_resolve_addr(unsigned long vaddr, unsigned long *paddr, int *valid, int o
 {
 
   //unsigned int page = (vaddr / PAGE_SIZE);
-  unsigned int page = (vaddr / sizeof(ptentry_t));
+  unsigned int page = ((vaddr / sizeof(ptentry_t))% sizeof(ptentry_t));
   if (current_pt[page].bits)
   {
     memory_accesses++;
@@ -379,7 +379,7 @@ int pt_demand_page(int pid, unsigned long vaddr, unsigned long *paddr, int op, i
   int i;
 
   //unsigned int page = (vaddr / PAGE_SIZE);
-  unsigned int page = (vaddr / sizeof(ptentry_t));
+  unsigned int page = ((vaddr / sizeof(ptentry_t))% sizeof(ptentry_t));
   frame_t *f = (frame_t *)NULL;
   int other_pid;
 
@@ -557,7 +557,7 @@ int tlb_resolve_addr(unsigned long vaddr, unsigned long *paddr, int op)
 {
 
   //unsigned int page = (vaddr / PAGE_SIZE);
-  unsigned int page = (vaddr / sizeof(ptentry_t));
+  unsigned int page = ((vaddr / sizeof(ptentry_t))% sizeof(ptentry_t));
   int i;
   for (i = 0; i < TLB_ENTRIES; i++)
   {
