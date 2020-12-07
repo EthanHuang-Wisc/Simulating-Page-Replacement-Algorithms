@@ -354,7 +354,7 @@ int pt_resolve_addr(unsigned long vaddr, unsigned long *paddr, int *valid, int o
 
     //**modified
     //*paddr = (current_pt[page].frame * PAGE_SIZE) + (vaddr % PAGE_SIZE);
-    *paddr = (current_pt[page].frame * PAGE_SIZE) + (vaddr*sizeof(ptentry_t));
+    *paddr = (current_pt[page].frame *sizeof(ptentry_t)) + (vaddr*sizeof(ptentry_t));
     *valid = 1;
     current_pt[page].op = op;
     hardware_update_pageref(&current_pt[page], op);
