@@ -1,6 +1,6 @@
 
 Simulating Page Replacement Algorithms
-The goal of this assignment is to evaluate several page replacement algorithms. You will use real memory trace data from UNIX systems to test these algorithms. Your assignment is to write a program that reads in the trace data and simulates the page replacement scheduling. You will keep track of various performance statistics and print these out at the completion of the trace file.
+The goal of this project is to evaluate several page replacement algorithms. We will use real memory trace data from UNIX systems to test these algorithms. The project is to write a program that reads in the trace data and simulates the page replacement scheduling. We will keep track of various performance statistics and print these out at the completion of the trace file.
 
 #Program structure
 
