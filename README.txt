@@ -13,17 +13,29 @@ The goal of this project is to evaluate several page replacement algorithms. We 
     3.sim-lru.c
     this is the main simulation function for lru algorithm
 
-    4.pagetable.c
+    4.sim-opt.c
+    this is the main simulation function for opt algorithm
+
+    5.sim-mfu.c
+    this is the main simulation function for mfu algorithm
+
+    6.pagetable.c
     This is the pagetable for the page replacement project
 
-    5.lru.c
+    7.lru.c
     This is lru page replacement algorithm for the page replacement project
     
-    6.clock.c
+    8.clock.c
     This is clock page replacement algorithm for the page replacement project
     
-    7.fifo.c
+    9.fifo.c
     This is fifo page replacement algorithm for the page replacement project
+    
+    10.opt.c
+    This is opt page replacement algorithm for the page replacement project
+
+    11.mfu.c
+    This is mfu page replacement algorithm for the page replacement project
 
 #Running the program
     
@@ -31,11 +43,15 @@ The goal of this project is to evaluate several page replacement algorithms. We 
     1. FIFO - First In First Out Algorithm 
     2. LRU - Least Recently Used Algorithm
     3. CLOCK - Clock Algorithm
+    4. OPT - OPT(min) Algorithm
+    5. MFU - Most Frequently Used Algorithm
     
     type ' $make all ' to generate three types of executors as following  
         1). 537pfsim-fifo 
         2). 537pfsim-lru
         3). 537pfsim-clock
+        4). 537pfsim-opt
+        5). 537pfsim-mfu
     
     USAGE:    
     e.g. $ ./537pfsim-lru -p 8192 -m 2 tracefile1
